@@ -1,6 +1,8 @@
 # movcli
 A cli tool to search and watch movies 
-# Usage 
+## Usage
+```bash
 $ cd movie-palyer
 $ pip install -r requirements.txt
 $./run.py
+```
