@@ -1,6 +1,6 @@
-# movcli
+# movcli 
 A cli tool to search and watch movies 
-## Usage
+## Usage 🖱️
 ```bash
 git clone https://github.com/salmiyounes/movcli.git
 cd movcli/movie-player
