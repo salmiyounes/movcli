@@ -2,7 +2,8 @@
 A cli tool to search and watch movies 
 ## Usage
 ```bash
-$ cd movie-palyer
+$ git clone https://github.com/salmiyounes/movcli.git
+$ cd movcli/movie-palyer
 $ pip install -r requirements.txt
 $./run.py
 ```
