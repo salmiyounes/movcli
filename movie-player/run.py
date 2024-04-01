@@ -34,7 +34,7 @@ class Main:
 	def print_movies_list(self, page : int = 1, search = None, clear : bool = False) -> Optional[Tuple[str, str]]:
 		try :
 			if clear:
-				os_sys = Utilities().check_os()
+				os_sys = Utilities.check_os()
 				if os_sys == "linux":
 					os.system('clear')
 				elif os_sys == "win32":
