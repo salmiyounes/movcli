@@ -7,7 +7,7 @@ from multiprocessing import Process
 from pyfzf.pyfzf import FzfPrompt
 from tqdm import tqdm
 from colorama import Fore
-from utils.extract import ExtractMovie, GetStream, RC4DecodeError, CouldntFetchKeys
+from utils.extract import ExtractMovie, GetStream, RC4DecodeError, CouldntFetchKeys, Utilities
 from Player.play import MpvPlayer, NoSuchPlayerFound
 from get_content.MOVIEDB import GetData, InvalidPage
 
@@ -34,7 +34,11 @@ class Main:
 	def print_movies_list(self, page : int = 1, search = None, clear : bool = False) -> Optional[Tuple[str, str]]:
 		try :
 			if clear:
-				os.system('clear')
+				os_sys = Utilities().check_os()
+				if os_sys == "linux":
+					os.system('clear')
+				elif os_sys == "win32":
+					os.system('cls')
 			search : str = str(input(f'{Fore.RED}> Enter your query : {Fore.GREEN}')) if search is None else search
 			fetch_movies = GetData(search.strip().lower(), movie=True).get_info_content(page)
 			result : List[str] = []

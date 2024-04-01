@@ -87,7 +87,9 @@ class Download(ExtractMovie):
 
 class Utilities:
     KEY_URL : str = "https://github.com/Ciarands/vidsrc-keys/blob/main/keys.json"
-
+    def check_os() -> str:
+        import sys
+        return sys.platform
     def encode_id(v_id: str) -> str:
         req = requests.get(Utilities.KEY_URL)
         text = req.text
