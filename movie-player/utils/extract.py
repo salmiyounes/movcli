@@ -1,3 +1,11 @@
+####################################################################################
+# Description: This code is adapted from the 'vidsrc-to-resolver' by Ciarands      #
+#                                                                                  #
+#                 original source : https://github.com/Ciarands/vidsrc-to-resolver #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
 from typing import List, Dict, Union, Optional, Tuple
 import urllib3
 import re
@@ -96,7 +104,6 @@ class Utilities:
 
         if req.status_code != 200:
             raise CouldntFetchKeys("Failed to fetch decryption keys!")
-        
         matches = re.search(r"\"rawLines\":\s*\[\"(.+)\"\]", text)
         if not matches:
             raise CouldntFetchKeys("Failed to extract rawLines from keys page!")
