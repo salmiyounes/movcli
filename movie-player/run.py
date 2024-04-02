@@ -8,7 +8,7 @@ from pyfzf.pyfzf import FzfPrompt
 from tqdm import tqdm
 from colorama import Fore
 from utils.extract import ExtractMovie, GetStream, RC4DecodeError, CouldntFetchKeys, Utilities
-from Player.play import MpvPlayer, NoSuchPlayerFound
+from Player.play import MpvPlayer, VlcPlayer, NoSuchPlayerFound
 from get_content.MOVIEDB import GetData, InvalidPage
 
 class Main:
@@ -42,26 +42,26 @@ class Main:
 			search : str = str(input(f'{Fore.RED}> Enter your query : {Fore.GREEN}')) if search is None else search
 			fetch_movies = GetData(search.strip().lower(), movie=True).get_info_content(page)
 			result : List[str] = []
-			page_number : int =  1
+			page : int =  1
 			for number, (title, _id, date) in tqdm(fetch_movies.items()) :
 				result.append(f'{number}- {title} {date} id : {_id}')
 			time.sleep(2)
-			result.extend(['next page', 'previos page', 'new search', 'quit'])
+			result.extend(['Next Page', 'Previous Page', 'New Search', 'Quit'])
 			user_prompt : str = FzfPrompt().prompt(result, '--reverse')
 
-			if user_prompt[-1] == 'next page':
+			if user_prompt[-1] == 'Next Page':
 				page += 1
 				self.print_movies_list(page, search, True)
-			elif user_prompt[-1] == 'previos page':
+			elif user_prompt[-1] == 'Previous Page':
 				if page > 1:
 					page -= 1
 					return self.print_movies_list(page, search, True)
 				else :
 					return self.print_movies_list(page=1, search=search, clear=True)
 				pass
-			elif user_prompt[-1] == 'quit':
+			elif user_prompt[-1] == 'Quit':
 				sys.exit()
-			elif user_prompt[-1] == 'new search':
+			elif user_prompt[-1] == 'New Search':
 				return self.print_movies_list(page=1, clear=True)
 			else:
 				user_prompt = user_prompt[0].split()
@@ -88,8 +88,12 @@ class Main:
 			m3u8_file = GetStream().get_m3u8_file(decoded_url)
 			assert m3u8_file is not None
 			list_of_choices : List[str] = ['Quit', 'New Search']
-			play = Process(target=MpvPlayer().mpv_paly, args=(title, True, m3u8_file, ))
-			play.start()
+			if MpvPlayer().mpv_check() :
+				play = Process(target=MpvPlayer().mpv_paly, args=(title, True, m3u8_file, ))
+				play.start()
+			elif VlcPlayer().vlc_check():
+				play =  Process(target=VlcPlayer().vlc_play, args=(title, True, m3u8_file, ))
+				play.start()
 			thread2 = FzfPrompt().prompt(list_of_choices, '--reverse')
 			if thread2[-1] == 'Quit':
 				play.kill()
