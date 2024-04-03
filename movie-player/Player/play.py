@@ -8,14 +8,14 @@ class MpvPlayer:
 	def mpv_check(self) -> bool :
 		return which('mpv') is not None
 
-	def mpv_paly(self, title : str, fullsecreen : bool, stream_url : str) -> subprocess.Popen:
+	def mpv_paly(self, title : str, fullsecreen : bool, stream_url : str, url : str) -> subprocess.Popen:
 		if self.mpv_check() :
-			mpv = ['mpv',  "--no-terminal"]
+			mpv = ['mpv']
 
 			if fullsecreen :
 				mpv.append('--fs')
 		
-			mpv.extend([f'--force-media-title={title}', stream_url])
+			mpv.extend([f'--force-media-title={title}', stream_url,  f'--http-header-fields=Referer: \'{url}\''])
 			stdout = open(os.devnull, 'w')
 			return subprocess.Popen(mpv, stdout=stdout, stderr=subprocess.STDOUT)
 
