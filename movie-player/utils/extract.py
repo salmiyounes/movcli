@@ -20,7 +20,7 @@ class ExtractMovie:
         self.BASE_API   = "https://vidsrc.to/embed/movie/{}".format(_id)
         self.SOURCE_URL = "https://vidsrc.to/ajax/embed/episode/"
         self.STRAE_URL = "https://vidsrc.to/ajax/embed/source/"
-        self.DEFAULT_KEY = "8z5Ag5wgagfsOuhz"
+        self.DEFAULT_KEY = "WXrUARXb1aDLaZjI"
         self.http = urllib3.PoolManager() 
         
     def get_data_id(self) -> str:
@@ -81,7 +81,7 @@ class GetStream(ExtractMovie) :
         assert req.status == 200 
         sources = json.loads(req.data).get('result').get('sources')
         m3u8_file = [value.get('file') for value in sources]
-        return m3u8_file[0] if m3u8_file else None
+        return m3u8_file[0], url
 
 class Download(ExtractMovie):
 
