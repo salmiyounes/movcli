@@ -85,14 +85,14 @@ class Main:
 		make_choice : List[str] = ['Watch', 'Download']
 		user_prompt : str = FzfPrompt().prompt(make_choice, '--reverse')
 		if user_prompt[0] == 'Watch':
-			m3u8_file = GetStream().get_m3u8_file(decoded_url)
+			m3u8_file, url = GetStream().get_m3u8_file(decoded_url)
 			assert m3u8_file is not None
 			list_of_choices : List[str] = ['Quit', 'New Search']
 			if MpvPlayer().mpv_check() :
-				play = Process(target=MpvPlayer().mpv_paly, args=(title, True, m3u8_file, ))
+				play = Process(target=MpvPlayer().mpv_paly, args=(title, True, m3u8_file, url, ))
 				play.start()
 			elif VlcPlayer().vlc_check():
-				play =  Process(target=VlcPlayer().vlc_play, args=(title, True, m3u8_file, ))
+				play =  Process(target=VlcPlayer().vlc_play, args=(title, True, m3u8_file, url, ))
 				play.start()
 			thread2 = FzfPrompt().prompt(list_of_choices, '--reverse')
 			if thread2[-1] == 'Quit':
