@@ -8,6 +8,8 @@
 
 from typing import List, Dict, Union, Optional, Tuple
 import urllib3
+from colorama import Fore
+import sys
 import re
 import requests
 from urllib.parse import urljoin, unquote
@@ -24,15 +26,19 @@ class ExtractMovie:
         self.http = urllib3.PoolManager() 
         
     def get_data_id(self) -> str:
-        req = self.http.request("GET", self.BASE_API)
-        assert req.status == 200
-      #  print (req.data)
-        soup = bs(req.data, 'html.parser')
-        data_id = soup.find('a', {'data-id' : True}).get('data-id')
-        if not data_id:
-            return None
+        try :
+            req = self.http.request("GET", self.BASE_API)
+            assert req.status == 200
+            #  print (req.data)
+            soup = bs(req.data, 'html.parser')
+            data_id = soup.find('a', {'data-id' : True}).get('data-id')
+            if not data_id:
+                return None
 
-        return data_id
+            return data_id
+        except AssertionError as e:
+            print (f'{Fore.RED}The page requested is not available .')
+            sys.exit()
 
     def get_sources(self, data_id : str) -> Dict:
         url : str = urljoin(self.SOURCE_URL, '{}/sources'.format(data_id))
