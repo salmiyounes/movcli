@@ -8,15 +8,11 @@ from bs4 import BeautifulSoup as bs
 
 class GetData :
 
-	def __init__(self, search : str, movie=False, tv_show=False):
+	def __init__(self, search : str, movie=True):
 		self.search = search
 		self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
 
-		if movie :
-			self.BASE_URL = "https://www.themoviedb.org/search/movie"
-		elif tv_show :
-			self.BASE_URL = "https://www.themoviedb.org/search/tv"
-
+		self.BASE_URL = "https://www.themoviedb.org/search/movie"
 	def check_valid_page(self, soup : bs) -> bool:
 		match_list : List[str] = []
 		for match in soup.find_all('p') :
@@ -40,11 +36,12 @@ class GetData :
 			film_detail = soup.find_all('div', {'class' : 'wrapper'})
 
 			for num, detail in enumerate(film_detail, start=1) :
-				result[num] = (
-				detail.find_all('h2')[0].string, # title
-				detail.find('a').get('href').split('/')[2] , # id
-				detail.find_all('span', {'class' : 'release_date'})[0].string if detail.find_all('span', {'class' : 'release_date'}) else "unknown" # release date
-				)
+				if 'movie' in detail.find('a').get('href').split('/'):
+					result[num] = (
+					detail.find_all('h2')[0].string, # title
+					detail.find('a').get('href').split('/')[2] , # id
+					detail.find_all('span', {'class' : 'release_date'})[0].string if detail.find_all('span', {'class' : 'release_date'}) else "unknown" # release date
+					)
 			return result
 
 class InvalidPage(Exception):
