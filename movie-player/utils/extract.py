@@ -73,7 +73,7 @@ class GetStream(ExtractMovie) :
         self.PROVIDER_URL = 'https://vidplay.online'
 
     def get_futoken(self, key : str , url : str) -> str :
-        req = requests.get(urljoin(self.PROVIDER_URL, '/futoken'), {"Referer": url})
+        req = requests.get(urljoin(self.PROVIDER_URL, '/futoken'), headers={"Referer": url})
         fu_key = re.search(r"var\s+k\s*=\s*'([^']+)'", req.text).group(1)
         return f"{fu_key},{','.join([str(ord(fu_key[i % len(fu_key)]) + ord(key[i])) for i in range(len(key))])}"
 
