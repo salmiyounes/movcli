@@ -45,13 +45,14 @@ class Main:
 			page : int =  1
 			for number, (title, _id, date) in tqdm(fetch_movies.items()) :
 				result.append(f'{number}- {title} {date} id : {_id}')
+			result.sort(key=lambda x : x.split()[-1])
 			time.sleep(2)
 			result.extend(['Next Page', 'Previous Page', 'New Search', 'Quit'])
 			user_prompt : str = FzfPrompt().prompt(result, '--reverse')
 
 			if user_prompt[-1] == 'Next Page':
 				page += 1
-				self.print_movies_list(page, search, True)
+				return self.print_movies_list(page, search, True)
 			elif user_prompt[-1] == 'Previous Page':
 				if page > 1:
 					page -= 1
@@ -65,7 +66,11 @@ class Main:
 				return self.print_movies_list(page=1, clear=True)
 			else:
 				user_prompt = user_prompt[0].split()
-				return  (' '.join(user_prompt) ,user_prompt[-1])
+				if '-' in user_prompt[-1]:
+					m_id: str = user_prompt[-1].split('-')[0]
+					return  (' '.join(user_prompt) ,m_id)
+				else:
+					return (' '.join(user_prompt), user_prompt[-1])
 			return None, None
 		except InvalidPage as e :
 			print (f'{Fore.RED}Could not find any result .', end ='\n')
