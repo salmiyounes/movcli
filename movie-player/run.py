@@ -2,6 +2,7 @@
 
 from typing import Tuple, Optional
 import os, sys, time
+from bisect import insort
 from threading import Thread
 from multiprocessing import Process
 from pyfzf.pyfzf import FzfPrompt
@@ -44,8 +45,7 @@ class Main:
 			result : List[str] = []
 			page : int =  1
 			for number, (title, _id, date) in tqdm(fetch_movies.items()) :
-				result.append(f'{number}- {title} {date} id : {_id}')
-			result.sort(key=lambda x : x.split()[-1])
+				insort(result, f'{title} {date} id : {_id}')
 			time.sleep(2)
 			result.extend(['Next Page', 'Previous Page', 'New Search', 'Quit'])
 			user_prompt : str = FzfPrompt().prompt(result, '--reverse')
